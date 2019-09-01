@@ -37,7 +37,7 @@ namespace CoreCodeCamp.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "GetCampsAsync - " + e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "GetCampsAsync - " + e.ToString());
             }
 
         }
@@ -53,7 +53,7 @@ namespace CoreCodeCamp.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "GetCampByMonikerAsync - " + e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "GetCampByMonikerAsync - " + e.ToString());
             }
         }
 
@@ -70,7 +70,7 @@ namespace CoreCodeCamp.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "GetCampByMonikerAsync - " + e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "GetCampByMonikerAsync - " + e.ToString());
             }
         }
 
@@ -103,7 +103,7 @@ namespace CoreCodeCamp.Controllers
             catch (Exception e)
             {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, "PostCamp - " + e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "PostCamp - " + e.ToString());
             }
 
             return BadRequest();
@@ -130,7 +130,7 @@ namespace CoreCodeCamp.Controllers
             catch (Exception e)
             {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, "PutCamp - " + e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "PutCamp - " + e.ToString());
             }
 
             return BadRequest();
@@ -151,14 +151,16 @@ namespace CoreCodeCamp.Controllers
 
                 if (await campRepository.SaveChangesAsync())
                     return Ok();
+
+                return BadRequest();
             }
             catch (Exception e)
             {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, "DeleteCamp - " + e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "DeleteCamp - " + e.ToString());
             }
 
-            return BadRequest();
+            
         }
     }
 }
