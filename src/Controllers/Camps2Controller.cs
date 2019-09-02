@@ -12,17 +12,18 @@ using System.Threading.Tasks;
 
 namespace CoreCodeCamp.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiVersion("1.0")]
-    [ApiVersion("1.1")]
+    //I created two routes just for the sake of the example with and without url versioning
+    [Route("api/v{version:apiVersion}/Camps")]
+    [Route("api/Camps")]
+    [ApiVersion("2.0")]
     [ApiController]
-    public class CampsController : ControllerBase
+    public class Camps2Controller : ControllerBase
     {
         private readonly ICampRepository campRepository;
         private readonly IMapper mapper;
         private readonly LinkGenerator linkGenerator;
 
-        public CampsController(ICampRepository campRepository, IMapper mapper, LinkGenerator linkGenerator)
+        public Camps2Controller(ICampRepository campRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
             this.campRepository = campRepository;
             this.mapper = mapper;
@@ -30,30 +31,18 @@ namespace CoreCodeCamp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<CampModel[]>> GetCampsAsync(bool includeTalks = false)
+        public async Task<IActionResult> GetCampsAsync(bool includeTalks = false)
         {
             try
             {
                 var results = await campRepository.GetAllCampsAsync(includeTalks);
-                CampModel[] model = mapper.Map<CampModel[]>(results);
-                return model;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "GetCampsAsync - " + e.ToString());
-            }
+                var result = new
+                {
+                    Count = results.Count(),
+                    Results = mapper.Map<CampModel[]>(results)
+                };
 
-        }
-
-        [MapToApiVersion("1.1")]
-        [HttpGet]
-        public async Task<ActionResult<CampModel[]>> GetCampsAsync11(bool includeTalks = true)
-        {
-            try
-            {
-                var results = await campRepository.GetAllCampsAsync(includeTalks);
-                CampModel[] model = mapper.Map<CampModel[]>(results);
-                return model;
+                return Ok(result);
             }
             catch (Exception e)
             {
